@@ -1,0 +1,68 @@
+{
+  "products": [
+    {
+      "id": "produkt-1",
+      "name": "Dekalkit Maverick Blå",
+      "price": 59,
+      "image": "assets/images/klistremerker/Skjermbilde 2026-05-14 183137.png",
+      "description": "30cm dekalark med klistremerker i blått. Perfekt for å dekorere og tilpasse dine eiendeler.",
+      "tag": "Produkt"
+    },
+    {
+      "id": "produkt-2",
+      "name": "HSK racing",
+      "price": 69,
+      "image": "assets/images/klistremerker/Skjermbilde 2026-05-14 183154.png",
+      "description": "20cm klistremerke",
+      "tag": "Produkt"
+    },
+    {
+      "id": "produkt-3",
+      "name": "HD10 sticker",
+      "price": 79,
+      "image": "assets/images/klistremerker/Skjermbilde 2026-05-14 183211.png",
+      "description": "8cm klistremerke",
+      "tag": "Produkt"
+    },
+    {
+      "id": "produkt-4",
+      "name": "Dekalkit Maverick Rød",
+      "price": 89,
+      "image": "assets/images/klistremerker/Skjermbilde 2026-05-14 183256.png",
+      "description": "30cm dekalark med klistremerker i rødt. Perfekt for å dekorere og tilpasse dine eiendeler.",
+      "tag": "Produkt"
+    },
+    {
+      "id": "produkt-5",
+      "name": "DD Audio sticker",
+      "price": 99,
+      "image": "assets/images/klistremerker/Skjermbilde 2026-05-14 183409.png",
+      "description": "DD Audio logo klistremerke i rød. 10cm størrelse, ideell for å dekorere bil, laptop eller andre overflater.",
+      "tag": "Produkt"
+    },
+    {
+      "id": "produkt-6",
+      "name": "DD Audio stor sticker",
+      "price": 109,
+      "image": "assets/images/klistremerker/Skjermbilde 2026-05-14 183435.png",
+      "description": "DD Audio logo klistremerke i rød. 20cm størrelse, ideell for å dekorere bil, laptop eller andre overflater.",
+      "tag": "Produkt"
+    },
+    {
+      "id": "produkt-7",
+      "name": "Sorry Lænsmann sticker",
+      "price": 119,
+      "image": "assets/images/klistremerker/Skjermbilde 2026-05-14 184315.png",
+      "description": "30 cm",
+      "tag": "Produkt"
+    },
+    {
+      "id": "produkt-8",
+      "name": "Selvtilpasset folie",
+      "price": "",
+      "image": "assets/images/klistremerker/oracal651folie10paks_1564113.webp",
+      "description": "Tilpasset folie etter dine ønsker. Send oss en melding med dine spesifikasjoner, og vi lager en unik folie for deg.",
+      "tag": "Produkt"
+    }
+  ]
+}   

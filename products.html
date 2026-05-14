@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Klistreverkstedet | Fornøyde kunder</title>
+  <meta name="description" content="Bilder fra fornøyde kunder. Disse bildene hentes fra klistreverksted-media.json.">
+  <meta name="robots" content="index, follow">
+  <meta name="theme-color" content="#f4efe6">
+  <link rel="canonical" href="https://klistre.lensmann.studio/products.html">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Klistreverkstedet | Fornøyde kunder">
+  <meta property="og:description" content="Visning av fornøyde kunder med bilder fra klistreverksted-media.json.">
+  <meta property="og:url" content="https://klistre.lensmann.studio/products.html">
+  <link rel="icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <a class="skip-link" href="#main-content">Hopp til innhold</a>
+
+  <header class="site-header">
+    <div class="container header-top">
+      <a href="https://lensmann.studio/" class="brand brand--image" aria-label="Til Lænsmann Studio hovedsiden">
+        <img class="brand-image" src="assets/images/image.png" alt="Til Lænsmann Studio">
+        <span class="brand-text">Klistreverkstedet</span>
+      </a>
+      <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Åpne meny">
+        <span class="nav-toggle__icon" aria-hidden="true">
+          <span class="nav-toggle__line"></span>
+          <span class="nav-toggle__line"></span>
+          <span class="nav-toggle__line"></span>
+        </span>
+      </button>
+    </div>
+    <div class="container">
+      <nav id="main-nav" class="top-links site-nav" aria-label="Navigasjon">
+        <a href="index.html">Produkter</a>
+        <a href="products.html" aria-current="page">Fornøyde kunder</a>
+        <a class="nav-back" href="https://lensmann.studio/">Til Lænsmann Studio</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main-content">
+    <section class="hero hero--compact">
+      <div class="container hero-grid hero-grid--single">
+        <div class="hero-copy">
+          <span class="eyebrow">Fornøyde kunder</span>
+          <h1>Kundebilder fra Klistreverkstedet</h1>
+          <p class="lead">Her er noen bilder fra fornøyde kunder.</p>
+          <div class="hero-actions">
+            <a class="btn btn-primary" href="index.html#produkter">Til produktene</a>
+            <a class="btn btn-secondary" href="https://klistre.lensmann.studio/">Til hovedsiden</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="content-section">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="section-title">Fornøyde kunder</h2>
+          <p class="section-lead">Disse bildene viser kundearbeid.</p>
+        </div>
+
+        <div id="customer-media-grid" class="gallery-grid">
+          <p class="empty-state">Laster kundebilder...</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-inner">
+      <span>© <span id="year"></span> Klistreverkstedet x Lænsmann Studio</span>
+      <a href="index.html">Til produkter</a>
+    </div>
+  </footer>
+
+  <script src="assets/js/site.js"></script>
+</body>
+</html>

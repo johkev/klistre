@@ -3,27 +3,30 @@
     {
       "type": "image",
       "src": "assets/images/klistreverksted/att.LzlJQorIvcI5yD04VaIDI7e5s_eKiS4DYdX5CrTsTfM.jpg",
-      "alt": "Klistreverkstedet motiv 1"
-    },
-    {
-      "type": "image",
-      "src": "assets/images/klistreverksted/IMG_1266.JPG",
-      "alt": "Klistreverkstedet motiv 2"
+      "alt": "Fornøyd kunde 1",
+      "title": "Stort klistremerke",
+      "caption": "Kunde som trengte et stort klistremerke (100cm) til sin UTV, og det fikset vi for dem."
     },
     {
       "type": "image",
       "src": "assets/images/klistreverksted/IMG_1271.JPG",
-      "alt": "Klistreverkstedet motiv 3"
+      "alt": "Fornøyd kunde 3",
+      "title": "Litt av hvert",
+      "caption": "Kunde som trengte klistremerker til sin UTV, og det fikset vi for dem."
     },
     {
       "type": "image",
       "src": "assets/images/klistreverksted/IMG_1285.JPG",
-      "alt": "Klistreverkstedet motiv 4"
+      "alt": "Fornøyd kunde 4",
+      "title": "Can-am",
+      "caption": "Kunde som trengte klistremerker til sin Can-am, og det fikset vi for dem."
     },
     {
       "type": "image",
       "src": "assets/images/klistreverksted/IMG_2086.JPG",
-      "alt": "Klistreverkstedet motiv 5"
+      "alt": "Fornøyd kunde 5",
+      "title": "Trollkveita",
+      "caption": "Her skulle Trollkveita spille på Tons Of Fåkk og dem trengte merch så vi fikset det for dem."
     }
   ]
 }

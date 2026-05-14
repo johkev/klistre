@@ -1,0 +1,458 @@
+const CATALOG_URL = "assets/data/produkter.json";
+const CUSTOMER_MEDIA_URL = "assets/data/klistreverksted-media.json";
+const CART_KEY = "klistreverkstedet-cart";
+const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
+
+let catalogProducts = [];
+
+function byId(id) {
+  return document.getElementById(id);
+}
+
+function formatPrice(value) {
+  return new Intl.NumberFormat("no-NO", {
+    maximumFractionDigits: 0,
+  }).format(value);
+}
+
+function safePath(path) {
+  return encodeURI(path);
+}
+
+function loadCart() {
+  try {
+    const saved = localStorage.getItem(CART_KEY);
+    return saved ? JSON.parse(saved) : [];
+  } catch {
+    return [];
+  }
+}
+
+function saveCart(cart) {
+  localStorage.setItem(CART_KEY, JSON.stringify(cart));
+}
+
+function getProductById(productId) {
+  return catalogProducts.find((product) => product.id === productId);
+}
+
+function addToCart(productId) {
+  const cart = loadCart();
+  const item = cart.find((entry) => entry.id === productId);
+
+  if (item) {
+    item.quantity += 1;
+  } else {
+    cart.push({ id: productId, quantity: 1 });
+  }
+
+  saveCart(cart);
+  renderCart();
+  openCartDrawer();
+}
+
+function setQuantity(productId, quantity) {
+  const cart = loadCart();
+  const item = cart.find((entry) => entry.id === productId);
+
+  if (!item) {
+    return;
+  }
+
+  item.quantity = quantity;
+
+  if (item.quantity <= 0) {
+    const nextCart = cart.filter((entry) => entry.id !== productId);
+    saveCart(nextCart);
+  } else {
+    saveCart(cart);
+  }
+
+  renderCart();
+}
+
+function clearCart() {
+  saveCart([]);
+  renderCart();
+}
+
+function renderProducts(products) {
+  const grid = byId("product-grid");
+
+  if (!grid) {
+    return;
+  }
+
+  if (!products.length) {
+    grid.innerHTML = '<p class="empty-state">Ingen produkter er lagt inn enda.</p>';
+    return;
+  }
+
+  grid.innerHTML = products
+    .map((product) => {
+      const hasPrice = typeof product.price === "number";
+      return `
+        <article class="product-card">
+          <div class="product-card__top">
+            <span class="pill">${product.tag || "Produkt"}</span>
+            <strong class="product-price">${hasPrice ? `${formatPrice(product.price)} kr` : "Pris på forespørsel"}</strong>
+          </div>
+          <img class="product-image" src="${safePath(product.image)}" alt="${product.name}" loading="lazy" decoding="async">
+          <h3>${product.name}</h3>
+          <p>${product.description}</p>
+          <button class="btn btn-primary btn-small" type="button" data-add-to-cart="${product.id}">Legg i handlekurv</button>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function renderCustomerMedia(items) {
+  const grid = byId("customer-media-grid");
+
+  if (!grid) {
+    return;
+  }
+
+  if (!items.length) {
+    grid.innerHTML = '<p class="empty-state">Ingen kundebilder er lagt inn enda.</p>';
+    return;
+  }
+
+  grid.innerHTML = items
+    .map((item) => {
+      return `
+        <article class="gallery-card">
+          <img src="${safePath(item.src)}" alt="${item.alt || "Kundebilde"}" loading="lazy" decoding="async">
+          <div class="gallery-card__body">
+            <h3>${item.title || "Fornøyd kunde"}</h3>
+            <p>${item.caption || "Takk for tilliten."}</p>
+          </div>
+        </article>
+      `;
+    })
+    .join("");
+}
+
+function renderCart() {
+  const cartPanel = byId("cart-panel");
+  const cartItems = byId("cart-items");
+  const cartTotal = byId("cart-total");
+  const cartCount = byId("cart-count");
+
+  if (!cartPanel || !cartItems || !cartTotal || !cartCount) {
+    return;
+  }
+
+  const cart = loadCart();
+  let quantitySum = 0;
+  let totalPrice = 0;
+
+  if (!cart.length) {
+    cartItems.innerHTML = '<p class="empty-state">Handlekurven er tom ennå.</p>';
+    cartTotal.textContent = "0 kr";
+    cartCount.textContent = "0";
+    syncCartSummary();
+    return;
+  }
+
+  cartItems.innerHTML = cart
+    .map((entry) => {
+      const product = getProductById(entry.id);
+
+      if (!product) {
+        return "";
+      }
+
+      quantitySum += entry.quantity;
+      const unitPrice = typeof product.price === "number" ? product.price : 0;
+      const lineTotal = unitPrice * entry.quantity;
+      totalPrice += lineTotal;
+
+      return `
+        <div class="cart-row">
+          <img class="cart-thumb" src="${safePath(product.image)}" alt="${product.name}" loading="lazy" decoding="async">
+          <div class="cart-row__meta">
+            <strong>${product.name}</strong>
+            <p>Antall: ${entry.quantity}${unitPrice ? ` · Sum: ${formatPrice(lineTotal)} kr` : ""}</p>
+          </div>
+          <div class="cart-row__actions">
+            <button class="qty-btn" type="button" data-cart-action="minus" data-product-id="${product.id}">-</button>
+            <span>${entry.quantity}</span>
+            <button class="qty-btn" type="button" data-cart-action="plus" data-product-id="${product.id}">+</button>
+            <button class="cart-remove" type="button" data-cart-action="remove" data-product-id="${product.id}">Fjern</button>
+          </div>
+        </div>
+      `;
+    })
+    .join("");
+
+  cartTotal.textContent = `${formatPrice(totalPrice)} kr`;
+  cartCount.textContent = String(quantitySum);
+  syncCartSummary();
+}
+
+function buildCartMessage() {
+  const cart = loadCart();
+
+  if (!cart.length) {
+    return "Ingen produkter i handlekurven.";
+  }
+
+  return cart
+    .map((entry) => {
+      const product = getProductById(entry.id);
+      if (!product) {
+        return null;
+      }
+
+      const priceText = typeof product.price === "number" ? ` (${formatPrice(product.price)} kr)` : "";
+      return `${product.name}${priceText} x ${entry.quantity}`;
+    })
+    .filter(Boolean)
+    .join("\n");
+}
+
+function syncCartSummary() {
+  const summaryInput = byId("cart-summary-input");
+  if (summaryInput) {
+    summaryInput.value = buildCartMessage();
+  }
+}
+
+async function loadCatalog() {
+  const response = await fetch(CATALOG_URL, { cache: "no-store" });
+
+  if (!response.ok) {
+    throw new Error("Kunne ikke hente produktlisten.");
+  }
+
+  return response.json();
+}
+
+async function loadCustomerMedia() {
+  const response = await fetch(CUSTOMER_MEDIA_URL, { cache: "no-store" });
+
+  if (!response.ok) {
+    throw new Error("Kunne ikke hente kundebilder.");
+  }
+
+  return response.json();
+}
+
+function setYear() {
+  const year = byId("year");
+
+  if (year) {
+    year.textContent = new Date().getFullYear();
+  }
+}
+
+function setStatus(message, isError = false) {
+  const status = byId("form-status");
+  if (!status) {
+    return;
+  }
+
+  status.textContent = message;
+  status.classList.toggle("form-note--error", isError);
+}
+
+function setupMobileNav() {
+  const navToggle = document.querySelector(".nav-toggle");
+  const siteNav = document.querySelector(".site-nav");
+
+  if (!navToggle || !siteNav) {
+    return;
+  }
+
+  const closeNav = () => {
+    navToggle.setAttribute("aria-expanded", "false");
+    navToggle.setAttribute("aria-label", "Åpne meny");
+    siteNav.classList.remove("is-open");
+  };
+
+  navToggle.addEventListener("click", () => {
+    const isOpen = navToggle.getAttribute("aria-expanded") === "true";
+    const nextOpen = !isOpen;
+    navToggle.setAttribute("aria-expanded", String(nextOpen));
+    navToggle.setAttribute("aria-label", nextOpen ? "Lukk meny" : "Åpne meny");
+    siteNav.classList.toggle("is-open", nextOpen);
+  });
+
+  siteNav.querySelectorAll("a").forEach((link) => {
+    link.addEventListener("click", closeNav);
+  });
+
+  window.addEventListener("resize", () => {
+    if (window.innerWidth > 820) {
+      closeNav();
+    }
+  });
+}
+
+function setupEvents() {
+  document.addEventListener("click", (event) => {
+    const addButton = event.target.closest("[data-add-to-cart]");
+    if (addButton) {
+      addToCart(addButton.dataset.addToCart);
+      return;
+    }
+
+    const cartButton = event.target.closest("[data-cart-action]");
+    if (!cartButton) {
+      return;
+    }
+
+    const productId = cartButton.dataset.productId;
+    const action = cartButton.dataset.cartAction;
+    const cart = loadCart();
+    const item = cart.find((entry) => entry.id === productId);
+
+    if (!item && action !== "remove") {
+      return;
+    }
+
+    if (action === "plus") {
+      setQuantity(productId, item.quantity + 1);
+    }
+
+    if (action === "minus") {
+      setQuantity(productId, item.quantity - 1);
+    }
+
+    if (action === "remove") {
+      const nextCart = cart.filter((entry) => entry.id !== productId);
+      saveCart(nextCart);
+      renderCart();
+    }
+  });
+
+  const clearButton = byId("clear-cart");
+  if (clearButton) {
+    clearButton.addEventListener("click", clearCart);
+  }
+
+  const orderForm = byId("order-form");
+  if (orderForm) {
+    orderForm.addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const cart = loadCart();
+      if (!cart.length) {
+        setStatus("Handlekurven er tom.", true);
+        return;
+      }
+
+      const formData = new FormData(orderForm);
+      formData.set("message", `${formData.get("message") || ""}\n\nHandlekurv:\n${buildCartMessage()}`.trim());
+
+      try {
+        setStatus("Sender bestillingen ...");
+
+        const response = await fetch(WEB3FORMS_ENDPOINT, {
+          method: "POST",
+          body: formData,
+        });
+
+        const result = await response.json();
+
+        if (!response.ok || !result.success) {
+          throw new Error("Kunne ikke sende bestillingen.");
+        }
+
+        clearCart();
+        orderForm.reset();
+        setStatus("Bestillingen er sendt.");
+      } catch (error) {
+        setStatus("Noe gikk galt. Prøv igjen om litt.", true);
+      }
+    });
+  }
+}
+
+function openCartDrawer() {
+  const cartPanel = byId("cart-panel");
+  const cartOverlay = byId("cart-overlay");
+  const cartToggle = byId("cart-toggle");
+
+  if (!cartPanel || !cartToggle || !cartOverlay) {
+    return;
+  }
+
+  cartPanel.classList.add("is-open");
+  cartOverlay.hidden = false;
+  cartToggle.setAttribute("aria-expanded", "true");
+}
+
+function closeCartDrawer() {
+  const cartPanel = byId("cart-panel");
+  const cartOverlay = byId("cart-overlay");
+  const cartToggle = byId("cart-toggle");
+
+  if (!cartPanel || !cartToggle || !cartOverlay) {
+    return;
+  }
+
+  cartPanel.classList.remove("is-open");
+  cartOverlay.hidden = true;
+  cartToggle.setAttribute("aria-expanded", "false");
+}
+
+function setupCartDrawer() {
+  const cartToggle = byId("cart-toggle");
+  const cartClose = byId("cart-close");
+  const cartOverlay = byId("cart-overlay");
+
+  if (!cartToggle) {
+    return;
+  }
+
+  cartToggle.addEventListener("click", () => {
+    const expanded = cartToggle.getAttribute("aria-expanded") === "true";
+    if (expanded) {
+      closeCartDrawer();
+      return;
+    }
+
+    openCartDrawer();
+  });
+
+  if (cartClose) {
+    cartClose.addEventListener("click", closeCartDrawer);
+  }
+
+  if (cartOverlay) {
+    cartOverlay.addEventListener("click", closeCartDrawer);
+  }
+}
+
+async function initSite() {
+  setYear();
+  setupMobileNav();
+  setupCartDrawer();
+  setupEvents();
+
+  try {
+    const catalog = await loadCatalog();
+    catalogProducts = Array.isArray(catalog.products) ? catalog.products : [];
+    renderProducts(catalogProducts);
+    const customerMediaResponse = await loadCustomerMedia();
+    renderCustomerMedia(Array.isArray(customerMediaResponse.media) ? customerMediaResponse.media : []);
+    renderCart();
+    syncCartSummary();
+  } catch (error) {
+    const productGrid = byId("product-grid");
+    const customerMediaGrid = byId("customer-media-grid");
+
+    if (productGrid) {
+      productGrid.innerHTML = '<p class="empty-state">Produktlisten kunne ikke lastes akkurat nå.</p>';
+    }
+
+    if (customerMediaGrid) {
+      customerMediaGrid.innerHTML = '<p class="empty-state">Kundebilder kunne ikke lastes akkurat nå.</p>';
+    }
+  }
+}
+
+initSite();
