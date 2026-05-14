@@ -1,0 +1,29 @@
+{
+  "media": [
+    {
+      "type": "image",
+      "src": "assets/images/klistreverksted/att.LzlJQorIvcI5yD04VaIDI7e5s_eKiS4DYdX5CrTsTfM.jpg",
+      "alt": "Klistreverkstedet motiv 1"
+    },
+    {
+      "type": "image",
+      "src": "assets/images/klistreverksted/IMG_1266.JPG",
+      "alt": "Klistreverkstedet motiv 2"
+    },
+    {
+      "type": "image",
+      "src": "assets/images/klistreverksted/IMG_1271.JPG",
+      "alt": "Klistreverkstedet motiv 3"
+    },
+    {
+      "type": "image",
+      "src": "assets/images/klistreverksted/IMG_1285.JPG",
+      "alt": "Klistreverkstedet motiv 4"
+    },
+    {
+      "type": "image",
+      "src": "assets/images/klistreverksted/IMG_2086.JPG",
+      "alt": "Klistreverkstedet motiv 5"
+    }
+  ]
+}

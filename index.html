@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="no">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<title>Klistreverkstedet | Klistremerker og visuell profil</title>
+	<meta name="description" content="Klistreverkstedet lager klistremerker, dekaler og grafiske elementer for band, arrangementer og små prosjekter.">
+	<meta name="robots" content="index, follow">
+	<meta name="theme-color" content="#0f1513">
+	<link rel="canonical" href="https://klistre.lensmann.studio/">
+	<meta property="og:type" content="website">
+	<meta property="og:title" content="Klistreverkstedet | Klistremerker og visuell profil">
+	<meta property="og:description" content="Visuell partner for klistremerker, dekaler og design til artister og arrangementer.">
+	<meta property="og:url" content="https://klistre.lensmann.studio/">
+	<link rel="icon" href="favicon.ico">
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="style.css">
+</head>
+<body>
+	<a class="skip-link" href="#main-content">Hopp til innhold</a>
+	<header class="site-header">
+		<div class="container nav-row">
+			<a href="https://lensmann.studio/" class="logo" aria-label="Lænsmann Studio hjem">
+				<img class="logo-image" src="assets/images/025058f0-4798-4625-9d1c-1b03dbedbc02.png" alt="Lænsmann Studio logo">
+				<span class="logo-text">Lænsmann Studio</span>
+			</a>
+			<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Åpne meny">
+				<span class="nav-toggle__icon" aria-hidden="true">
+					<span class="nav-toggle__line"></span>
+					<span class="nav-toggle__line"></span>
+					<span class="nav-toggle__line"></span>
+				</span>
+			</button>
+			<nav id="main-nav" class="site-nav" aria-label="Hovedmeny">
+				<a href="https://lensmann.studio/">Hjem</a>
+				<a href="https://lensmann.studio/#tjenester">Tjenester</a>
+				<a href="https://lensmann.studio/leieut.html">Leie utstyr</a>
+				<a href="https://lensmann.studio/galleri.html">Galleri</a>
+				<a href="https://klistre.lensmann.studio/">Klistreverkstedet</a>
+				<a href="https://lensmann.studio/kontakt.html" class="btn btn-secondary btn-booking">Book oss</a>
+			</nav>
+		</div>
+	</header>
+
+	<main id="main-content">
+		<section class="page-hero">
+			<div class="container hero-layout">
+				<div>
+					<span class="eyebrow">Klistremerker og visuell profil</span>
+					<h1 class="page-title">Klistreverkstedet</h1>
+					<p class="section-lead">Vi lager klistremerker, dekaler og enkel visuell profil til artister, band, arrangementer og små merkevarer som vil synes bedre.</p>
+				</div>
+				<img src="assets/images/image.png" alt="Klistreverkstedet" loading="lazy" decoding="async" style="max-width: 100%; height: auto; object-fit: cover; border-radius: 8px;">
+			</div>
+		</section>
+
+		<div class="content-shell">
+			<section>
+				<div class="container">
+					<article class="partner-card">
+						<div>
+							<h2 class="section-title">Trenger du visuell profil?</h2>
+							<p class="section-lead">Send oss en e-post med logoen eller designet du vil bruke, og skriv hva du ønsker og hvor mange du trenger. Vi følger opp med forslag og pris.</p>
+							<div class="feature-row">
+								<span class="tag">Klistremerker</span>
+								<span class="tag">Dekaler</span>
+								<span class="tag">Band-design</span>
+							</div>
+							<div class="hero-actions">
+								<a class="btn btn-primary" href="mailto:klistreverkstedet@lensmann.studio?subject=Foresp%C3%B8rsel%20om%20klistremerker">Kontakt Klistreverkstedet</a>
+							</div>
+						</div>
+						<img src="assets/images/klistreverkstedet.png" alt="Klistreverkstedet logo" loading="lazy" decoding="async">
+					</article>
+				</div>
+			</section>
+
+			<section>
+				<div class="container">
+					<div class="section-head">
+						<h2 class="section-title">Bilder fra Klistreverkstedet</h2>
+						<p class="section-lead">Et lite utvalg fra produksjoner og visuelle detaljer vi har laget.</p>
+					</div>
+
+					<div id="klistre-media-wall" class="media-wall">
+						<p class="form-help">Laster media...</p>
+					</div>
+				</div>
+			</section>
+		</div>
+	</main>
+
+	<footer>
+		<div class="container footer-inner">
+			<span>© <span id="year"></span> Klistreverkstedet x Lænsmann Studio</span>
+			<span>Visuell partner</span>
+		</div>
+	</footer>
+
+	<script>
+		document.getElementById("year").textContent = new Date().getFullYear();
+
+		function setupMobileNav() {
+			const navToggle = document.querySelector(".nav-toggle");
+			const siteNav = document.querySelector(".site-nav");
+
+			if (!navToggle || !siteNav) {
+				return;
+			}
+
+			const closeNav = () => {
+				navToggle.setAttribute("aria-expanded", "false");
+				navToggle.setAttribute("aria-label", "Åpne meny");
+				siteNav.classList.remove("is-open");
+			};
+
+			navToggle.addEventListener("click", () => {
+				const isExpanded = navToggle.getAttribute("aria-expanded") === "true";
+				const nextExpanded = !isExpanded;
+				navToggle.setAttribute("aria-expanded", String(nextExpanded));
+				navToggle.setAttribute("aria-label", nextExpanded ? "Lukk meny" : "Åpne meny");
+				siteNav.classList.toggle("is-open", nextExpanded);
+			});
+
+			siteNav.querySelectorAll("a").forEach((link) => {
+				link.addEventListener("click", closeNav);
+			});
+
+			window.addEventListener("resize", () => {
+				if (window.innerWidth > 820) {
+					closeNav();
+				}
+			});
+		}
+
+		setupMobileNav();
+
+		async function loadKlistreMedia() {
+			const mediaWall = document.getElementById("klistre-media-wall");
+
+			try {
+				const response = await fetch("assets/data/klistreverksted-media.json", { cache: "no-store" });
+				if (!response.ok) {
+					throw new Error("Kunne ikke hente media.");
+				}
+
+				const data = await response.json();
+				const mediaItems = Array.isArray(data.media) ? data.media : [];
+
+				if (!mediaItems.length) {
+					mediaWall.innerHTML = '<p class="form-help">Ingen media funnet enda.</p>';
+					return;
+				}
+
+				mediaWall.innerHTML = mediaItems
+					.map((item, index) => {
+						if (item.type === "video") {
+							return `
+								<figure class="media-item">
+									<video controls preload="metadata" playsinline>
+										<source src="${item.src}" type="video/quicktime">
+										Nettleseren din støtter ikke denne videoen.
+									</video>
+								</figure>
+							`;
+						}
+
+						const altText = item.alt || `Klistreverkstedet media ${index + 1}`;
+						return `
+							<figure class="media-item">
+								<img src="${item.src}" alt="${altText}" loading="lazy" decoding="async">
+							</figure>
+						`;
+					})
+					.join("");
+			} catch (error) {
+				mediaWall.innerHTML = '<p class="form-help">Kunne ikke laste media akkurat nå. Prøv å oppdatere siden.</p>';
+			}
+		}
+
+		loadKlistreMedia();
+	</script>
+</body>
+</html>
