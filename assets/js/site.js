@@ -19,6 +19,41 @@ function safePath(path) {
   return encodeURI(path);
 }
 
+function getShippingOption() {
+  const selected = document.querySelector('[data-shipping-option]:checked');
+
+  if (!selected) {
+    return {
+      label: "Hente selv på baksalen",
+      cost: 0,
+    };
+  }
+
+  return {
+    label: selected.value,
+    cost: Number(selected.dataset.shippingCost || "0"),
+  };
+}
+
+function getTipAmount() {
+  const tipInput = byId("tip-amount-input");
+
+  if (!tipInput) {
+    return 0;
+  }
+
+  const tipValue = Number(tipInput.value || "0");
+  return Number.isFinite(tipValue) && tipValue > 0 ? Math.round(tipValue) : 0;
+}
+
+function getCartSubtotal() {
+  return loadCart().reduce((subtotal, entry) => {
+    const product = getProductById(entry.id);
+    const unitPrice = product && typeof product.price === "number" ? product.price : 0;
+    return subtotal + unitPrice * entry.quantity;
+  }, 0);
+}
+
 function loadCart() {
   try {
     const saved = localStorage.getItem(CART_KEY);
@@ -138,6 +173,8 @@ function renderCart() {
   const cartPanel = byId("cart-panel");
   const cartItems = byId("cart-items");
   const cartTotal = byId("cart-total");
+  const cartShippingTotal = byId("cart-shipping-total");
+  const cartGrandTotal = byId("cart-grand-total");
   const cartCount = byId("cart-count");
 
   if (!cartPanel || !cartItems || !cartTotal || !cartCount) {
@@ -147,10 +184,18 @@ function renderCart() {
   const cart = loadCart();
   let quantitySum = 0;
   let totalPrice = 0;
+  const shipping = getShippingOption();
+  const tipAmount = getTipAmount();
 
   if (!cart.length) {
     cartItems.innerHTML = '<p class="empty-state">Handlekurven er tom ennå.</p>';
     cartTotal.textContent = "0 kr";
+    if (cartShippingTotal) {
+      cartShippingTotal.textContent = `${formatPrice(shipping.cost)} kr`;
+    }
+    if (cartGrandTotal) {
+      cartGrandTotal.textContent = `${formatPrice(shipping.cost + tipAmount)} kr`;
+    }
     cartCount.textContent = "0";
     syncCartSummary();
     return;
@@ -174,13 +219,21 @@ function renderCart() {
           <img class="cart-thumb" src="${safePath(product.image)}" alt="${product.name}" loading="lazy" decoding="async">
           <div class="cart-row__meta">
             <strong>${product.name}</strong>
-            <p>Antall: ${entry.quantity}${unitPrice ? ` · Sum: ${formatPrice(lineTotal)} kr` : ""}</p>
+            <p class="cart-meta-sub">Antall: ${entry.quantity}</p>
+            <div class="cart-line-total">${unitPrice ? `${formatPrice(lineTotal)} kr` : ""}</div>
           </div>
           <div class="cart-row__actions">
-            <button class="qty-btn" type="button" data-cart-action="minus" data-product-id="${product.id}">-</button>
-            <span>${entry.quantity}</span>
-            <button class="qty-btn" type="button" data-cart-action="plus" data-product-id="${product.id}">+</button>
-            <button class="cart-remove" type="button" data-cart-action="remove" data-product-id="${product.id}">Fjern</button>
+            <div class="qty-group">
+              <button class="qty-btn" type="button" data-cart-action="minus" data-product-id="${product.id}" aria-label="Minsk antall">-</button>
+              <span class="qty-value">${entry.quantity}</span>
+              <button class="qty-btn" type="button" data-cart-action="plus" data-product-id="${product.id}" aria-label="Øk antall">+</button>
+            </div>
+            <div class="remove-group">
+              <button class="cart-remove" type="button" data-cart-action="remove" data-product-id="${product.id}" aria-label="Fjern produkt">
+                <span class="remove-icon" aria-hidden="true">✕</span>
+                <span class="remove-text">Fjern</span>
+              </button>
+            </div>
           </div>
         </div>
       `;
@@ -188,6 +241,12 @@ function renderCart() {
     .join("");
 
   cartTotal.textContent = `${formatPrice(totalPrice)} kr`;
+  if (cartShippingTotal) {
+    cartShippingTotal.textContent = `${shipping.cost === 0 ? "Gratis" : `${formatPrice(shipping.cost)} kr`}`;
+  }
+  if (cartGrandTotal) {
+    cartGrandTotal.textContent = `${formatPrice(totalPrice + shipping.cost + tipAmount)} kr`;
+  }
   cartCount.textContent = String(quantitySum);
   syncCartSummary();
 }
@@ -215,8 +274,33 @@ function buildCartMessage() {
 
 function syncCartSummary() {
   const summaryInput = byId("cart-summary-input");
+  const shippingMethodInput = byId("shipping-method-input");
+  const shippingCostInput = byId("shipping-cost-input");
+  const tipAmountInput = byId("tip-amount-input");
+  const orderTotalInput = byId("order-total-input");
+
+  const shipping = getShippingOption();
+  const tipAmount = getTipAmount();
+  const orderTotal = getCartSubtotal() + shipping.cost + tipAmount;
+
   if (summaryInput) {
-    summaryInput.value = buildCartMessage();
+    summaryInput.value = `${buildCartMessage()}\nFrakt: ${shipping.label} (${shipping.cost === 0 ? "gratis" : `${formatPrice(shipping.cost)} kr`})\nTips: ${tipAmount === 0 ? "0 kr" : `${formatPrice(tipAmount)} kr`}`.trim();
+  }
+
+  if (shippingMethodInput) {
+    shippingMethodInput.value = shipping.label;
+  }
+
+  if (shippingCostInput) {
+    shippingCostInput.value = String(shipping.cost);
+  }
+
+  if (tipAmountInput) {
+    tipAmountInput.value = tipAmount ? String(tipAmount) : "";
+  }
+
+  if (orderTotalInput) {
+    orderTotalInput.value = `${formatPrice(orderTotal)} kr`;
   }
 }
 
@@ -333,6 +417,19 @@ function setupEvents() {
     clearButton.addEventListener("click", clearCart);
   }
 
+  document.querySelectorAll("[data-shipping-option]").forEach((input) => {
+    input.addEventListener("change", () => {
+      renderCart();
+    });
+  });
+
+  const tipAmountInput = byId("tip-amount-input");
+  if (tipAmountInput) {
+    tipAmountInput.addEventListener("input", () => {
+      renderCart();
+    });
+  }
+
   const orderForm = byId("order-form");
   if (orderForm) {
     orderForm.addEventListener("submit", async (event) => {
@@ -345,7 +442,14 @@ function setupEvents() {
       }
 
       const formData = new FormData(orderForm);
-      formData.set("message", `${formData.get("message") || ""}\n\nHandlekurv:\n${buildCartMessage()}`.trim());
+      const shipping = getShippingOption();
+      const tipAmount = getTipAmount();
+      const orderTotal = `${formatPrice(getCartSubtotal() + shipping.cost + tipAmount)} kr`;
+      formData.set("shipping_method", shipping.label);
+      formData.set("shipping_cost", String(shipping.cost));
+      formData.set("tip_amount", String(tipAmount));
+      formData.set("order_total", orderTotal);
+      formData.set("message", `${formData.get("message") || ""}\n\nHandlekurv:\n${buildCartMessage()}\n\nFrakt: ${shipping.label} (${shipping.cost === 0 ? "gratis" : `${formatPrice(shipping.cost)} kr`})\nTips: ${tipAmount === 0 ? "0 kr" : `${formatPrice(tipAmount)} kr`}\nTotal: ${orderTotal}`.trim());
 
       try {
         setStatus("Sender bestillingen ...");
@@ -427,10 +531,57 @@ function setupCartDrawer() {
   }
 }
 
+function setupGoofyEasterEgg() {
+  const egg = document.querySelector("[data-goofy-easter-egg]");
+
+  if (!egg) {
+    return;
+  }
+
+  const maxClicks = 10;
+  const maxViewportRatio = 0.95;
+
+  egg.dataset.clickCount = egg.dataset.clickCount || "0";
+  egg.style.setProperty("--goofy-scale", egg.dataset.clickCount === "0" ? "1" : egg.dataset.clickCount);
+
+  const setEggScale = (clickCount) => {
+    const nextScale = 1 + clickCount * 0.22;
+    egg.style.setProperty("--goofy-scale", String(nextScale));
+  };
+
+  setEggScale(Number(egg.dataset.clickCount));
+
+  egg.addEventListener("click", () => {
+    if (egg.classList.contains("is-exploding")) {
+      return;
+    }
+
+    const nextClickCount = Number(egg.dataset.clickCount || "0") + 1;
+    egg.dataset.clickCount = String(nextClickCount);
+
+    if (nextClickCount >= maxClicks) {
+      const viewportCap = Math.floor(Math.min(window.innerWidth, window.innerHeight) * maxViewportRatio);
+      const baseSize = 12;
+      const explodeScale = viewportCap / baseSize;
+      egg.style.setProperty("--goofy-scale", String(explodeScale));
+      egg.classList.add("is-exploding");
+
+      window.setTimeout(() => {
+        egg.hidden = true;
+      }, 980);
+
+      return;
+    }
+
+    setEggScale(nextClickCount);
+  });
+}
+
 async function initSite() {
   setYear();
   setupMobileNav();
   setupCartDrawer();
+  setupGoofyEasterEgg();
   setupEvents();
 
   try {

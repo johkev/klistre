@@ -23,10 +23,27 @@
 
 	<header class="site-header">
 		<div class="container header-top">
+			<button class="goofy-easter-egg" type="button" data-goofy-easter-egg aria-label="Hemmelige bildeknapp">
+				<img src="assets/images/goofy-ahh-pictures-face-man-pics.jpg" alt="" aria-hidden="true">
+			</button>
+
 			<a href="https://klistre.lensmann.studio/" class="brand brand--image" aria-label="Til Klistreverkstedet">
-				<img class="brand-image" src="assets/images/image.png" alt="Klistreverkstedet logo">
+				<img class="brand-image logo-image" src="assets/images/image.png" alt="Klistreverkstedet logo">
 				<span class="brand-text">Klistreverkstedet</span>
 			</a>
+
+			<div class="social-icons">
+			  <a href="https://youtube.lensmann.studio" target="_blank" aria-label="YouTube">
+				<svg viewBox="0 0 24 24" class="icon">
+				  <path fill="currentColor" d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+				</svg>
+			  </a>
+			  <a href="https://facebook.lensmann.studio" target="_blank" aria-label="Facebook">
+				<svg viewBox="0 0 24 24" class="icon">
+				  <path fill="currentColor" d="M22 12a10 10 0 1 0-11.5 9.95v-7.05H8v-2.9h2.5V9.9c0-2.5 1.5-3.9 3.8-3.9 1.1 0 2.2.2 2.2.2v2.4h-1.2c-1.2 0-1.6.75-1.6 1.5v1.8H17l-.4 2.9h-2.5v7.05A10 10 0 0 0 22 12"/>
+				</svg>
+			  </a>
+			</div>
 
 			<button class="nav-toggle" type="button" aria-expanded="false" aria-controls="main-nav" aria-label="Åpne meny">
 				<span class="nav-toggle__icon" aria-hidden="true">
@@ -127,6 +144,7 @@
 			<input type="hidden" name="from_name" value="Klistreverkstedet">
 
 			<input type="hidden" name="cart_summary" id="cart-summary-input">
+			<input type="hidden" name="order_total" id="order-total-input">
 
 			<div class="form-grid form-grid--single">
 
@@ -174,11 +192,66 @@
 
 			</div>
 
+			<div class="shipping-options" aria-labelledby="shipping-options-title">
+				<h3 id="shipping-options-title" class="shipping-options__title">Frakt</h3>
+
+				<label class="shipping-option">
+					<input type="radio" name="shipping_method" value="Hente selv på baksalen" data-shipping-option data-shipping-cost="0" checked>
+					<span>
+						<strong>Hente selv på baksalen</strong>
+						<em>Gratis</em>
+					</span>
+				</label>
+
+				<label class="shipping-option">
+					<input type="radio" name="shipping_method" value="Frakt uten sporing" data-shipping-option data-shipping-cost="50">
+					<span>
+						<strong>Frakt uten sporing</strong>
+						<em>50 kr</em>
+					</span>
+				</label>
+
+				<label class="shipping-option">
+					<input type="radio" name="shipping_method" value="Frakt med sporing" data-shipping-option data-shipping-cost="80">
+					<span>
+						<strong>Frakt med sporing</strong>
+						<em>80 kr</em>
+					</span>
+				</label>
+			</div>
+
+			<div class="tip-field">
+				<label for="tip-amount-input">Tips oss</label>
+				<div class="tip-field__row">
+					<input
+						id="tip-amount-input"
+						name="tip_amount"
+						type="number"
+						min="0"
+						step="1"
+						inputmode="numeric"
+						placeholder="Valgfritt beløp"
+						data-tip-amount>
+					<span>kr</span>
+				</div>
+				<p class="tip-field__help">Velg selv om du vil tipse litt ekstra.</p>
+			</div>
+
 			<div class="cart-summary">
 
 				<div class="cart-summary__row">
 					<span>Sum</span>
 					<strong id="cart-total">0 kr</strong>
+				</div>
+
+				<div class="cart-summary__row cart-summary__row--shipping">
+					<span>Frakt</span>
+					<strong id="cart-shipping-total">0 kr</strong>
+				</div>
+
+				<div class="cart-summary__row cart-summary__row--grand">
+					<span>Total</span>
+					<strong id="cart-grand-total">0 kr</strong>
 				</div>
 
 				<p class="cart-note">
@@ -214,4 +287,3 @@
 	<script src="assets/js/site.js"></script>
 </body>
 </html>
-```
