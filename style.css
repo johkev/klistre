@@ -798,6 +798,67 @@ section {
   font-size: 1.05rem;
 }
 
+/* --- Simple/order-form overrides to reduce 'shop' look --- */
+body {
+  background: #ffffff;
+  color: #111111;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+}
+
+.site-header {
+  background: #ffffff;
+  border-bottom: 1px solid #e6e6e6;
+  backdrop-filter: none;
+}
+
+.logo-image { display: none; }
+.brand-text { font-weight: 700; color: #111; }
+.social-icons { display: none; }
+
+/* Make buttons look like simple form controls */
+.btn {
+  border-radius: 6px;
+  padding: 8px 12px;
+  box-shadow: none;
+  font-weight: 700;
+}
+
+.btn-primary {
+  background: transparent;
+  color: #111;
+  border: 1px solid #cfcfcf;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: #444;
+  border: 1px solid #eee;
+}
+
+/* Product list: keep original catalog styles above */
+
+/* Make cart panel look like a simple form panel */
+.cart-panel {
+  background: #fff;
+  color: #111;
+  border: 1px solid #e6e6e6;
+  box-shadow: none;
+  border-radius: 6px;
+  padding: 16px;
+}
+
+.cart-row { border-bottom: 1px solid #f4f4f4; padding: 8px 0; }
+.qty-group, .cart-remove { display: none; }
+.cart-meta-sub { color: #666 }
+
+/* Hide floating cart toggle badge (reduces shop impression) */
+#cart-toggle { display: none; }
+
+.cart-warning { background: #ffece6; border: 1px solid #ff0000; padding: 8px; border-radius: 6px; color: #ff0000; font-size: 0.95rem }
+
+/* Make overall look less 'polished' and more like a simple order form */
+.hero-copy, .hero-card { background: transparent; box-shadow: none; border: 0; padding: 0 }
+
 .form-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));

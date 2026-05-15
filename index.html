@@ -70,14 +70,14 @@
 				<div class="hero-copy">
 					<span class="eyebrow">Klistreverkstedet</span>
 
-					<h1>Unike klistremerker laget for folk som vil skille seg ut.</h1>
+					<h1>Bestill klistremerker fra oss — vi lager dem for deg.</h1>
 
 					<p class="lead">
-						Velg favorittene dine, legg dem i handlekurven og send inn en bestilling direkte fra nettsiden.
+						Denne siden er et bestillingsskjema: velg design og send oss en bestilling, så lager vi klistremerkene og kontakter deg med bekreftelse og pris.
 					</p>
 
 					<div class="hero-actions">
-						<a class="btn btn-primary" href="#produkter">Se klistremerker</a>
+						<a class="btn btn-primary" href="#produkter">Se katalog og bestill</a>
 						<a class="btn btn-secondary" href="products.html">Se galleri</a>
 					</div>
 				</div>
@@ -103,7 +103,7 @@
 					<h2 class="section-title">Klistremerker</h2>
 
 					<p class="section-lead">
-						Utforsk utvalget vårt og finn stickers som passer din stil. Hvis det er stor bestilling så får dere god rabatt 😊
+						Utforsk katalogen og trykk "Bestill" på et design for å åpne bestillingsskjemaet. Oppgi antall, kontaktinfo og eventuelle merknader — vi svarer med bekreftelse og betalingsinformasjon.
 					</p>
 				</div>
 
@@ -115,8 +115,8 @@
 		</section>
 	</main>
 
-	<button id="cart-toggle" class="cart-toggle" type="button" aria-expanded="false" aria-controls="cart-panel" aria-label="Åpne handlekurv">
-		Handlekurv <span class="cart-toggle__badge" id="cart-count">0</span>
+	<button id="cart-toggle" class="cart-toggle" type="button" aria-expanded="false" aria-controls="cart-panel" aria-label="Åpne bestillingsskjema">
+		Bestilling <span class="cart-toggle__badge" id="cart-count">0</span>
 	</button>
 
 	<div id="cart-overlay" class="cart-overlay" hidden></div>
@@ -124,9 +124,9 @@
 	<aside id="cart-panel" class="cart-panel cart-drawer" aria-label="Handlekurv">
 
 		<div class="cart-panel__head">
-			<h2 class="section-title">Handlekurv</h2>
+			<h2 class="section-title">Bestillingsforespørsel</h2>
 
-			<button id="cart-close" class="cart-close" type="button" aria-label="Lukk handlekurv">
+			<button id="cart-close" class="cart-close" type="button" aria-label="Lukk bestillingsforespørsel">
 				×
 			</button>
 		</div>
@@ -240,7 +240,7 @@
 			<div class="cart-summary">
 
 				<div class="cart-summary__row">
-					<span>Sum</span>
+					<span>Estimert sum</span>
 					<strong id="cart-total">0 kr</strong>
 				</div>
 
@@ -250,17 +250,19 @@
 				</div>
 
 				<div class="cart-summary__row cart-summary__row--grand">
-					<span>Total</span>
+					<span>Foreløpig total (ikke betaling)</span>
 					<strong id="cart-grand-total">0 kr</strong>
 				</div>
 
+				<p class="cart-warning"><strong>Viktig:</strong> Dette er kun en bestilling — ingen betaling skjer her. Vi kontakter deg for å bekrefte pris, levering og betalingsmåte.</p>
+
 				<p class="cart-note">
-					Når du sender inn bestillingen så lager vi klistremerkene med engang og sender melding når det er ferdig.
+					Når du sender inn bestillingen kontakter vi deg for å bekrefte ordre, leveringstid og betaling. Denne siden sender kun bestillingsinformasjon til oss.
 				</p>
 
 				<div class="form-actions">
 					<button id="clear-cart" class="btn btn-secondary btn-block" type="button">
-						Tøm handlekurv
+						Nullstill
 					</button>
 
 					<button class="btn btn-primary btn-block" type="submit">
@@ -269,6 +271,7 @@
 				</div>
 
 				<p id="form-status" class="form-note" aria-live="polite"></p>
+				<p class="form-help">Etter innsending kontakter vi deg for å bekrefte ordre og betalingsinformasjon.</p>
 
 			</div>
 
@@ -287,5 +290,3 @@
 	<script src="assets/js/site.js"></script>
 </body>
 </html>
-<!--håpe det hær funke mann-->
-<!--hvis du ser det her så e du en sikkelig nerd. jævla raring. og du e gay seff-->

@@ -135,7 +135,7 @@ function renderProducts(products) {
           <img class="product-image" src="${safePath(product.image)}" alt="${product.name}" loading="lazy" decoding="async">
           <h3>${product.name}</h3>
           <p>${product.description}</p>
-          <button class="btn btn-primary btn-small" type="button" data-add-to-cart="${product.id}">Legg i handlekurv</button>
+          <button class="btn btn-primary btn-small" type="button" data-order-product="${product.id}">Send forespørsel</button>
         </article>
       `;
     })
@@ -377,6 +377,16 @@ function setupMobileNav() {
 
 function setupEvents() {
   document.addEventListener("click", (event) => {
+    const orderButton = event.target.closest("[data-order-product]");
+    if (orderButton) {
+      const productId = orderButton.dataset.orderProduct;
+      // set cart to only this product and open the order panel
+      saveCart([{ id: productId, quantity: 1 }]);
+      renderCart();
+      openCartDrawer();
+      return;
+    }
+
     const addButton = event.target.closest("[data-add-to-cart]");
     if (addButton) {
       addToCart(addButton.dataset.addToCart);
