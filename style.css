@@ -899,8 +899,8 @@ body {
   display: inline;
 }
 
-/* Hide floating cart toggle badge (reduces shop impression) */
-#cart-toggle { display: none; }
+/* Floating cart toggle badge: show by default */
+#cart-toggle { display: inline-flex; align-items: center; gap: 8px; }
 
 .cart-warning { background: #ffece6; border: 1px solid #ff0000; padding: 8px; border-radius: 6px; color: #ff0000; font-size: 0.95rem }
 
