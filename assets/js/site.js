@@ -3,6 +3,8 @@ const CUSTOMER_MEDIA_URL = "assets/data/klistreverksted-media.json";
 const CART_KEY = "klistreverkstedet-cart";
 const WEB3FORMS_ENDPOINT = "https://api.web3forms.com/submit";
 
+// (Uploadcare will enforce image-only uploads; we keep no local file validation)
+
 let catalogProducts = [];
 
 function byId(id) {
@@ -380,10 +382,7 @@ function setupEvents() {
     const orderButton = event.target.closest("[data-order-product]");
     if (orderButton) {
       const productId = orderButton.dataset.orderProduct;
-      // set cart to only this product and open the order panel
-      saveCart([{ id: productId, quantity: 1 }]);
-      renderCart();
-      openCartDrawer();
+      addToCart(productId);
       return;
     }
 
@@ -461,6 +460,12 @@ function setupEvents() {
       formData.set("order_total", orderTotal);
       formData.set("message", `${formData.get("message") || ""}\n\nHandlekurv:\n${buildCartMessage()}\n\nFrakt: ${shipping.label} (${shipping.cost === 0 ? "gratis" : `${formatPrice(shipping.cost)} kr`})\nTips: ${tipAmount === 0 ? "0 kr" : `${formatPrice(tipAmount)} kr`}\nTotal: ${orderTotal}`.trim());
 
+      // optional URL field for reference (kept from previous flow)
+      const attachmentUrlInput = byId("attachment-url-input");
+      if (attachmentUrlInput && attachmentUrlInput.value) {
+        formData.set("attachment_url", attachmentUrlInput.value);
+      }
+
       try {
         setStatus("Sender bestillingen ...");
 
@@ -478,6 +483,12 @@ function setupEvents() {
         clearCart();
         orderForm.reset();
         setStatus("Bestillingen er sendt.");
+            // Redirect to a simple thank-you page after a short delay
+            try {
+              setTimeout(() => {
+                window.location.href = 'thank-you.html';
+              }, 800);
+            } catch (e) { /* ignore */ }
       } catch (error) {
         setStatus("Noe gikk galt. Prøv igjen om litt.", true);
       }
@@ -587,12 +598,44 @@ function setupGoofyEasterEgg() {
   });
 }
 
+function setupUploadcare() {
+  if (typeof uploadcare === 'undefined') {
+    // Uploadcare script not loaded yet; try again later
+    return;
+  }
+
+  const widget = uploadcare.Widget('[role=uploadcare-uploader]');
+  const hiddenInput = byId('reference-image-url');
+
+  if (!widget) {
+    return;
+  }
+
+  widget.onChange((filePromise) => {
+    if (!filePromise) {
+      if (hiddenInput) hiddenInput.value = "";
+      return;
+    }
+
+    // filePromise is a Promise-like Uploadcare File object
+    filePromise.done((fileInfo) => {
+      const url = fileInfo && (fileInfo.cdnUrl || fileInfo.cdn_url || fileInfo.originalUrl || fileInfo.original_url);
+      if (hiddenInput) hiddenInput.value = url || "";
+    }).fail(() => {
+      if (hiddenInput) hiddenInput.value = "";
+      setStatus('Opplasting feilet. Prøv igjen.', true);
+    });
+  });
+}
+
 async function initSite() {
   setYear();
   setupMobileNav();
   setupCartDrawer();
   setupGoofyEasterEgg();
   setupEvents();
+  // Initialize Uploadcare widget handling (if script already loaded)
+  try { setupUploadcare(); } catch (e) { /* ignore */ }
 
   try {
     const catalog = await loadCatalog();

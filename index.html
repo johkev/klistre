@@ -181,13 +181,23 @@
 						required>
 				</div>
 
+				<!-- Referansebilde uploader placed between email and message -->
+				<div class="field">
+				  <label for="uploadcare-uploader">Last opp ett referansebilde</label>
+				  <div class="upload-instructions"></div>
+				  <!-- Uploadcare widget (images only). Public key set via data-public-key -->
+				  <input type="hidden" role="uploadcare-uploader" id="uploadcare-uploader" data-public-key="46de1b38b22875c5a2c2" data-images-only="true" data-clearable="true">
+				  <!-- Hidden field to store the returned public image URL -->
+				  <input type="hidden" id="reference-image-url" name="reference_image_url">
+				</div>
+
 				<div class="field field-full">
 					<label for="customer-note">Melding</label>
 
 					<textarea
 						id="customer-note"
 						name="message"
-						placeholder="Skriv hvis du har spørsmål eller ønsker noe spesielt. Vi trenger å vite farge og størrelse og gjerne eksempel/bilde av ønsket design"></textarea>
+						placeholder="Skriv kort om ønsket design (farge, størrelse)."></textarea>
 				</div>
 
 			</div>
@@ -261,6 +271,7 @@
 				</p>
 
 				<div class="form-actions">
+
 					<button id="clear-cart" class="btn btn-secondary btn-block" type="button">
 						Nullstill
 					</button>
@@ -287,6 +298,11 @@
 		</div>
 	</footer>
 
+	<script>
+		UPLOADCARE_PUBLIC_KEY = "46de1b38b22875c5a2c2";
+		UPLOADCARE_LOCALE = "nb";
+	</script>
+	<script src="https://ucarecdn.com/libs/widget/3.x/uploadcare.full.min.js" charset="utf-8"></script>
 	<script src="assets/js/site.js"></script>
 </body>
 </html>

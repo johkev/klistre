@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Takk — Klistreverkstedet</title>
+  <meta name="theme-color" content="#f7f3eb">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="container" style="padding:48px 0; text-align:center;">
+    <h1>Takk for bestillingen!</h1>
+    <p>Vi har mottatt forespørselen din. Vi kontakter deg snart for bekreftelse og betalingsinformasjon.</p>
+
+    <div class="thank-you-gif-wrap" aria-label="Tilfeldig GIF fra Giphy">
+      <img id="thank-you-gif" alt="Tilfeldig GIF" loading="eager" decoding="async">
+    </div>
+
+    <p style="margin-top:20px;"><a class="btn btn-primary" href="/">Tilbake til forsiden</a></p>
+  </main>
+
+  <script>
+    (function () {
+      const gifs = [
+        'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnc3cjBsZ3o1ZHdhY3h6YmZiYjR1bmgyZTBteWEzeXl2OG9vdXd4MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/jrs6ZQRgIKIhvzbzez/giphy.gif',
+        'https://media.giphy.com/media/JpG2A9P3dPHXaTYrwu/giphy.gif',
+        'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExb213Nmtta3hvb3RncXhpcWdsamM2d2M2dmh6cmxsMjB3eGY2dXB3byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TKL99l61UBNnnQSx4o/giphy.gif',
+        'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXBhZHo5anZmMTdzZDBjazhxNGNxNWJ3MjAwcDA3eXM1OXpiYXc2cyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oj7riquJFVinXdmER5/giphy.gif',
+        'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExejFudzZheWV4NmVnc3RlbHNkcmU5eDhzcjl1YWVvOWxjY2NrY3J6ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oz8xGRXaIHGqts3hC/giphy.gif'
+      ];
+
+      const gif = document.getElementById('thank-you-gif');
+      if (!gif) return;
+
+      const queueKey = 'klistreverkstedet-thank-you-gif-queue';
+
+      const shuffle = (items) => {
+        const nextItems = items.slice();
+
+        for (let index = nextItems.length - 1; index > 0; index -= 1) {
+          const randomBuffer = new Uint32Array(1);
+          window.crypto.getRandomValues(randomBuffer);
+          const randomIndex = randomBuffer[0] % (index + 1);
+
+          [nextItems[index], nextItems[randomIndex]] = [nextItems[randomIndex], nextItems[index]];
+        }
+
+        return nextItems;
+      };
+
+      let queue = [];
+
+      try {
+        queue = JSON.parse(window.localStorage.getItem(queueKey) || '[]');
+      } catch {
+        queue = [];
+      }
+
+      if (!Array.isArray(queue) || queue.length === 0) {
+        queue = shuffle(gifs);
+      }
+
+      const pick = queue.shift();
+      window.localStorage.setItem(queueKey, JSON.stringify(queue));
+      gif.src = pick;
+      gif.width = 420;
+      gif.height = 420;
+    }());
+  </script>
+</body>
+</html>

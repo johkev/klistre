@@ -233,6 +233,24 @@ summary:focus-visible {
   margin: 0 auto;
 }
 
+.thank-you-gif-wrap {
+  width: min(420px, 100%);
+  margin: 28px auto 0;
+  padding: 14px;
+  border-radius: 22px;
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: var(--shadow-soft);
+}
+
+.thank-you-gif-wrap img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 16px;
+  background: linear-gradient(135deg, rgba(255, 135, 92, 0.18), rgba(63, 194, 163, 0.18));
+}
+
 .site-header {
   position: sticky;
   top: 0;
@@ -848,8 +866,38 @@ body {
 }
 
 .cart-row { border-bottom: 1px solid #f4f4f4; padding: 8px 0; }
-.qty-group, .cart-remove { display: none; }
+.qty-group {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.cart-remove {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
 .cart-meta-sub { color: #666 }
+
+/* Ensure quantity and remove controls are visible on light/order form theme */
+.qty-btn {
+  background: #ffffff;
+  color: #111111;
+  border: 1px solid #e0e0e0;
+}
+
+.qty-btn:hover {
+  background: #f6f6f6;
+}
+
+.cart-remove {
+  background: transparent;
+  color: #8b0000;
+  border: 1px solid rgba(0,0,0,0.04);
+}
+
+.cart-remove .remove-text {
+  display: inline;
+}
 
 /* Hide floating cart toggle badge (reduces shop impression) */
 #cart-toggle { display: none; }
