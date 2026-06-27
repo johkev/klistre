@@ -559,7 +559,7 @@ function setupGoofyEasterEgg() {
     return;
   }
 
-  const maxClicks = 10;
+  const maxClicks = 1;
   const maxViewportRatio = 0.95;
 
   egg.dataset.clickCount = egg.dataset.clickCount || "0";
@@ -589,6 +589,7 @@ function setupGoofyEasterEgg() {
 
       window.setTimeout(() => {
         egg.hidden = true;
+        window.location.href = "baretull.html";
       }, 980);
 
       return;

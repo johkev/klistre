@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="no">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Takk — Klistreverkstedet</title>
+  <meta name="theme-color" content="#f7f3eb">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sora:wght@400;600;700;800&family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .jumpscare-overlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #000;
+      color: #fff;
+      z-index: 99999;
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 120ms linear, visibility 0s linear 120ms;
+      pointer-events: none;
+    }
+
+    .jumpscare-overlay.is-visible {
+      opacity: 1;
+      visibility: visible;
+      transition-delay: 0s;
+      pointer-events: auto;
+    }
+
+    .jumpscare-emoji {
+      font-size: clamp(10rem, 35vw, 28rem);
+      line-height: 1;
+      text-shadow: 0 0 24px rgba(255, 255, 255, 0.45);
+      animation: jumpscare-pulse 220ms steps(2, end) infinite;
+      user-select: none;
+    }
+
+    @keyframes jumpscare-pulse {
+      0%,
+      100% {
+        transform: scale(1);
+      }
+
+      50% {
+        transform: scale(1.08);
+      }
+    }
+  </style>
+</head>
+<body>
+  <div id="jumpscare-overlay" class="jumpscare-overlay" aria-hidden="true">
+    <div class="jumpscare-emoji" aria-label="Jumpscare">💀</div>
+  </div>
+
+  <main class="container" style="padding:48px 0; text-align:center;">
+    <h1>Nå skvatt du sikkelig!</h1>
+    <p>Hahahaha💀😂💀😊😍⭐👌🎙️🎙️</p>
+
+    <div class="thank-you-gif-wrap" aria-label="Tilfeldig GIF fra Giphy">
+      <img id="thank-you-gif" alt="Tilfeldig GIF" loading="eager" decoding="async">
+    </div>
+
+    <p style="margin-top:20px;"><a class="btn btn-primary" href="/">Tilbake til forsiden</a></p>
+  </main>
+
+  <script>
+    (function () {
+      const overlay = document.getElementById('jumpscare-overlay');
+
+      window.setTimeout(() => {
+        if (overlay) {
+          overlay.classList.add('is-visible');
+        }
+      }, 3200);
+
+      window.setTimeout(() => {
+        window.location.href = 'index.html';
+      }, 7000);
+
+      const gifs = [
+        'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMnc3cjBsZ3o1ZHdhY3h6YmZiYjR1bmgyZTBteWEzeXl2OG9vdXd4MSZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/jrs6ZQRgIKIhvzbzez/giphy.gif',
+        'https://media.giphy.com/media/JpG2A9P3dPHXaTYrwu/giphy.gif',
+        'https://media3.giphy.com/media/v1.Y2lkPTc5MGI3NjExb213Nmtta3hvb3RncXhpcWdsamM2d2M2dmh6cmxsMjB3eGY2dXB3byZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/TKL99l61UBNnnQSx4o/giphy.gif',
+        'https://media2.giphy.com/media/v1.Y2lkPTc5MGI3NjExMXBhZHo5anZmMTdzZDBjazhxNGNxNWJ3MjAwcDA3eXM1OXpiYXc2cyZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/oj7riquJFVinXdmER5/giphy.gif',
+        'https://media0.giphy.com/media/v1.Y2lkPTc5MGI3NjExejFudzZheWV4NmVnc3RlbHNkcmU5eDhzcjl1YWVvOWxjY2NrY3J6ZCZlcD12MV9pbnRlcm5hbF9naWZfYnlfaWQmY3Q9Zw/3oz8xGRXaIHGqts3hC/giphy.gif'
+      ];
+
+      const gif = document.getElementById('thank-you-gif');
+      if (!gif) return;
+
+      const queueKey = 'klistreverkstedet-thank-you-gif-queue';
+
+      const shuffle = (items) => {
+        const nextItems = items.slice();
+
+        for (let index = nextItems.length - 1; index > 0; index -= 1) {
+          const randomBuffer = new Uint32Array(1);
+          window.crypto.getRandomValues(randomBuffer);
+          const randomIndex = randomBuffer[0] % (index + 1);
+
+          [nextItems[index], nextItems[randomIndex]] = [nextItems[randomIndex], nextItems[index]];
+        }
+
+        return nextItems;
+      };
+
+      let queue = [];
+
+      try {
+        queue = JSON.parse(window.localStorage.getItem(queueKey) || '[]');
+      } catch {
+        queue = [];
+      }
+
+      if (!Array.isArray(queue) || queue.length === 0) {
+        queue = shuffle(gifs);
+      }
+
+      const pick = queue.shift();
+      window.localStorage.setItem(queueKey, JSON.stringify(queue));
+      gif.src = pick;
+      gif.width = 420;
+      gif.height = 420;
+    }());
+  </script>
+</body>
+</html>
